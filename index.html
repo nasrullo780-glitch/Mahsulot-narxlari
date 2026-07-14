@@ -184,6 +184,7 @@
   .margin-pill.negative{background:var(--red-soft); color:var(--red);}
   .card-prices{display:flex; gap:18px; margin-top:10px; font-size:13px; color:var(--ink-soft);}
   .card-prices b{color:var(--ink); font-weight:700;}
+  .card-date{font-size:11.5px; color:var(--ink-soft); margin-top:8px; display:flex; gap:12px; flex-wrap:wrap;}
   .card-actions{display:flex; gap:8px; margin-top:12px;}
   .icon-btn{
     border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 12px;
@@ -455,6 +456,15 @@ function fmtMoney(n){
   return Math.round(n).toLocaleString('fr-FR').replace(/,/g,' ') + " so'm";
 }
 
+function fmtDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yyyy = d.getFullYear();
+  return `${dd}.${mm}.${yyyy}`;
+}
+
 function render(){
   const list = document.getElementById('list');
   const filtered = getFiltered();
@@ -489,6 +499,10 @@ function render(){
         <div>Kirim: <b>${fmtMoney(p.costPrice)}</b></div>
         <div>Sotish: <b>${fmtMoney(p.sellPrice)}</b></div>
         <div>Foyda: <b style="color:${negative ? 'var(--red)' : 'var(--green)'}">${negative ? '-' : ''}${fmtMoney(Math.abs(profit))}</b></div>
+      </div>
+      <div class="card-date">
+        ${p.createdAt ? `<span>Qo'shildi: ${fmtDate(p.createdAt)}</span>` : ''}
+        ${p.updatedAt && p.updatedAt !== p.createdAt ? `<span>Tahrirlandi: ${fmtDate(p.updatedAt)}</span>` : ''}
       </div>
       <div class="card-actions">
         <button class="icon-btn" data-edit="${p.id}">Tahrirlash</button>
@@ -587,11 +601,14 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     const p = products.find(x => x.id === editingId);
     p.name = name; p.capacity = capacity; p.category = selectedCat;
     p.costPrice = cost; p.sellPrice = sell;
+    p.updatedAt = new Date().toISOString();
   } else {
+    const now = new Date().toISOString();
     products.push({
       id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
       name, capacity, category: selectedCat,
-      costPrice: cost, sellPrice: sell
+      costPrice: cost, sellPrice: sell,
+      createdAt: now, updatedAt: now
     });
   }
   persist();
