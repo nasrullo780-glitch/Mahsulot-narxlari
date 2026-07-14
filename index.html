@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahsulot narxlari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green-dark:#0F2E20;
+    --green:#1F5C3F;
+    --green-light:#2E7D53;
+    --navy:#1B3A6B;
+    --navy-light:#2A4F8F;
+    --gold:#C9A227;
+    --gold-light:#E4C55E;
+    --paper:#F6F4EE;
+    --card:#FFFFFF;
+    --ink:#1C2321;
+    --ink-soft:#5B655F;
+    --line:#E4E0D5;
+    --red:#B3261E;
+    --red-soft:#FBE9E7;
+    --green-soft:#E7F4EC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  .hero{
+    background:linear-gradient(155deg,var(--green-dark) 0%,var(--green) 55%,var(--green-light) 100%);
+    padding:38px 20px 30px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-60px; top:-60px;
+    width:220px; height:220px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.05);
+  }
+  .hero-inner{position:relative; max-width:720px; margin:0 auto;}
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'Lora',serif;
+    font-weight:600;
+    font-size:32px;
+    margin:0 0 8px;
+    letter-spacing:-.01em;
+  }
+  .subtitle{
+    font-size:14px;
+    color:rgba(255,255,255,0.78);
+    margin:0 0 20px;
+    max-width:420px;
+    line-height:1.5;
+  }
+  .cta{
+    background:linear-gradient(180deg,var(--gold-light),var(--gold));
+    color:#3A2C00;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14px;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,0.18);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .cta:active{transform:translateY(1px); box-shadow:0 2px 8px rgba(0,0,0,0.18);}
+
+  .status-line{
+    max-width:720px; margin:10px auto 0; padding:0 20px;
+    font-size:12px; color:rgba(255,255,255,0.6);
+    display:flex; align-items:center; gap:6px;
+  }
+  .status-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-light);}
+
+  .wrap{max-width:720px; margin:0 auto; padding:0 20px;}
+
+  /* Form */
+  .form-panel{
+    background:var(--card);
+    border-radius:16px;
+    margin-top:-18px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(15,46,32,0.12);
+    border:1px solid var(--line);
+    animation:slideDown .18s ease;
+  }
+  @keyframes slideDown{from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:translateY(0);}}
+  .form-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
+  .form-head h2{font-family:'Lora',serif; font-size:18px; margin:0; font-weight:600;}
+  .close-btn{
+    background:var(--paper); border:1px solid var(--line); width:30px; height:30px;
+    border-radius:50%; cursor:pointer; font-size:15px; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;}
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-size:12px; color:var(--ink-soft); font-weight:600;}
+  .field input, .field select{
+    border:1px solid var(--line); border-radius:8px; padding:10px 11px;
+    font-size:14px; font-family:'Inter',sans-serif; background:#fff; color:var(--ink);
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--green-light); outline-offset:1px;}
+  .cat-picker{display:flex; flex-wrap:wrap; gap:6px;}
+  .cat-opt{
+    border:1px solid var(--line); background:#fff; padding:7px 12px; border-radius:20px;
+    font-size:12.5px; cursor:pointer; color:var(--ink-soft); font-weight:600;
+  }
+  .cat-opt.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .margin-preview{
+    background:var(--paper); border-radius:10px; padding:10px 12px; font-size:13px;
+    margin:6px 0 14px; color:var(--ink-soft); display:flex; justify-content:space-between;
+  }
+  .margin-preview b{color:var(--green);}
+  .margin-preview.negative b{color:var(--red);}
+  .form-actions{display:flex; gap:10px;}
+  .btn-primary{
+    flex:1; background:var(--green); color:#fff; border:none; padding:12px; border-radius:9px;
+    font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .btn-ghost{
+    background:#fff; color:var(--ink-soft); border:1px solid var(--line); padding:12px 16px;
+    border-radius:9px; font-weight:600; font-size:14px; cursor:pointer;
+  }
+
+  /* Search + filters */
+  .search-wrap{margin-top:18px;}
+  .search-box{
+    display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line);
+    border-radius:10px; padding:11px 13px;
+  }
+  .search-box input{border:none; outline:none; flex:1; font-size:14px; font-family:'Inter',sans-serif; background:transparent;}
+  .search-box svg{flex-shrink:0; color:var(--ink-soft);}
+  .fuzzy-note{font-size:12px; color:var(--gold); margin:8px 2px 0; font-weight:600;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 6px;}
+  .chip{
+    border:1px solid var(--line); background:#fff; padding:7px 14px; border-radius:20px;
+    font-size:13px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+  }
+  .chip.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+
+  /* List */
+  .list{margin-top:14px; display:flex; flex-direction:column; gap:10px;}
+  .empty-state{
+    text-align:center; padding:50px 20px; color:var(--ink-soft);
+  }
+  .empty-state .big{font-family:'Lora',serif; font-size:17px; color:var(--ink); margin-bottom:6px;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px;
+  }
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .name-row{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .p-name{font-family:'Lora',serif; font-weight:600; font-size:16px;}
+  .p-cap{
+    background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:2px 7px;
+    font-size:11px; color:var(--ink-soft); font-weight:600;
+  }
+  .p-cat{font-size:11px; color:var(--navy); font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-top:3px;}
+  .margin-pill{
+    padding:5px 11px; border-radius:20px; font-size:12.5px; font-weight:700;
+    background:var(--green-soft); color:var(--green); white-space:nowrap;
+  }
+  .margin-pill.negative{background:var(--red-soft); color:var(--red);}
+  .card-prices{display:flex; gap:18px; margin-top:10px; font-size:13px; color:var(--ink-soft);}
+  .card-prices b{color:var(--ink); font-weight:700;}
+  .card-actions{display:flex; gap:8px; margin-top:12px;}
+  .icon-btn{
+    border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 12px;
+    font-size:12.5px; font-weight:600; color:var(--ink-soft); cursor:pointer;
+  }
+  .icon-btn.danger{color:var(--red); border-color:#F0D2CF;}
+
+  .footer-tools{
+    display:flex; justify-content:center; gap:14px; margin-top:26px; padding-top:16px;
+    border-top:1px dashed var(--line);
+  }
+  .link-btn{
+    background:none; border:none; color:var(--ink-soft); font-size:12px; text-decoration:underline;
+    cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  #importFile{display:none;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Ombor &middot; Narxlar</div>
+    <h1>Mahsulot narxlari</h1>
+    <p class="subtitle">Veterinariya va agro mahsulotlarining kirim va sotish narxlarini boshqaring — foyda avtomatik hisoblanadi.</p>
+    <button class="cta" id="openFormBtn">+ Mahsulot qo'shish</button>
+  </div>
+  <div class="status-line" id="statusLine"><span class="status-dot"></span><span id="statusText">Yuklanmoqda...</span></div>
+</div>
+
+<div class="wrap">
+
+  <div class="form-panel" id="formPanel" style="display:none;">
+    <div class="form-head">
+      <h2 id="formTitle">Yangi mahsulot</h2>
+      <button class="close-btn" id="closeFormBtn">✕</button>
+    </div>
+
+    <div class="field-row">
+      <div class="field" style="grid-column:1/3;">
+        <label>Mahsulot nomi</label>
+        <input type="text" id="f_name" placeholder="Masalan: Meradok">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Hajmi / og'irligi</label>
+        <input type="text" id="f_capacity" placeholder="Masalan: 50 ml">
+      </div>
+      <div class="field">
+        <label>Kategoriya</label>
+        <div class="cat-picker" id="catPicker">
+          <div class="cat-opt" data-cat="Veterinariya">Veterinariya</div>
+          <div class="cat-opt" data-cat="Agro">Agro</div>
+          <div class="cat-opt" data-cat="Antirodent">Antirodent</div>
+          <div class="cat-opt" data-cat="Boshqalar">Boshqalar</div>
+        </div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Kirim narxi (so'm)</label>
+        <input type="number" id="f_cost" placeholder="0" min="0">
+      </div>
+      <div class="field">
+        <label>Sotish narxi (so'm)</label>
+        <input type="number" id="f_sell" placeholder="0" min="0">
+      </div>
+    </div>
+
+    <div class="margin-preview" id="marginPreview">
+      <span>Foyda</span>
+      <span><b id="marginAmt">0 so'm</b> &nbsp; (<b id="marginPct">0%</b>)</span>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" id="saveBtn">Saqlash</button>
+      <button class="btn-ghost" id="cancelBtn">Bekor qilish</button>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Mahsulot qidirish...">
+    </div>
+    <div class="fuzzy-note" id="fuzzyNote" style="display:none;">Aniq mos kelish topilmadi — o'xshash natijalar ko'rsatilmoqda</div>
+  </div>
+
+  <div class="chips" id="chips">
+    <div class="chip active" data-cat="Barchasi">Barchasi</div>
+    <div class="chip" data-cat="Veterinariya">Veterinariya</div>
+    <div class="chip" data-cat="Agro">Agro</div>
+    <div class="chip" data-cat="Antirodent">Antirodent</div>
+    <div class="chip" data-cat="Boshqalar">Boshqalar</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="footer-tools">
+    <button class="link-btn" id="exportBtn">Zaxira nusxa yuklab olish (JSON)</button>
+    <button class="link-btn" id="importBtn">Zaxiradan tiklash</button>
+    <input type="file" id="importFile" accept="application/json">
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'mahsulot_narxlari_products';
+let products = [];
+let editingId = null;
+let selectedCat = null; // for form
+let activeChip = 'Barchasi';
+
+// ---------- Storage layer ----------
+// localStorage is the source of truth (fast, synchronous, reliable across sessions
+// for a home-screen PWA / same-origin reload). window.storage (Claude artifact API)
+// is written to as a best-effort secondary backup, and only read from on load if
+// localStorage turns out to be empty (first run, or local data got wiped).
+
+function localSave(list){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    return true;
+  }catch(e){
+    console.error('localStorage save failed', e);
+    return false;
+  }
+}
+
+function localLoad(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  }catch(e){
+    console.error('localStorage load failed', e);
+    return null;
+  }
+}
+
+async function remoteSaveBestEffort(list){
+  try{
+    if(window.storage && typeof window.storage.set === 'function'){
+      await window.storage.set(STORAGE_KEY, JSON.stringify(list), false);
+    }
+  }catch(e){
+    console.warn('window.storage save failed (non-fatal):', e);
+  }
+}
+
+async function remoteLoadBestEffort(){
+  try{
+    if(window.storage && typeof window.storage.get === 'function'){
+      const res = await window.storage.get(STORAGE_KEY, false);
+      if(res && res.value){
+        const parsed = JSON.parse(res.value);
+        if(Array.isArray(parsed)) return parsed;
+      }
+    }
+  }catch(e){
+    console.warn('window.storage load failed (non-fatal):', e);
+  }
+  return null;
+}
+
+function setStatus(text){
+  document.getElementById('statusText').textContent = text;
+}
+
+async function persist(){
+  localSave(products);
+  setStatus('Saqlandi ✓');
+  remoteSaveBestEffort(products); // fire and forget, non-blocking
+}
+
+async function loadAll(){
+  setStatus('Yuklanmoqda...');
+  const local = localLoad();
+  if(local && local.length){
+    products = local;
+    render();
+    setStatus(products.length + ' ta mahsulot yuklandi');
+    // keep remote backup in sync silently
+    remoteSaveBestEffort(products);
+    return;
+  }
+  // local empty — try remote as a fallback (covers first load / wiped local storage)
+  const remote = await remoteLoadBestEffort();
+  if(remote && remote.length){
+    products = remote;
+    localSave(products); // heal local copy
+    render();
+    setStatus(products.length + ' ta mahsulot yuklandi (zaxiradan)');
+    return;
+  }
+  products = [];
+  render();
+  setStatus('Hali mahsulot yo\'q');
+}
+
+// ---------- Levenshtein fuzzy search ----------
+function levenshtein(a, b){
+  a = a.toLowerCase(); b = b.toLowerCase();
+  const m = a.length, n = b.length;
+  if(m === 0) return n;
+  if(n === 0) return m;
+  const dp = Array.from({length:m+1}, () => new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i;
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      const cost = a[i-1]===b[j-1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i-1][j]+1,
+        dp[i][j-1]+1,
+        dp[i-1][j-1]+cost
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+function fuzzyMatch(query, list){
+  const q = query.toLowerCase().trim();
+  const scored = [];
+  list.forEach(p => {
+    const words = (p.name + ' ' + p.capacity).toLowerCase().split(/\s+/);
+    let best = Infinity;
+    words.forEach(w => {
+      if(!w) return;
+      const d = levenshtein(q, w);
+      const threshold = Math.max(2, Math.floor(w.length * 0.4));
+      if(d <= threshold && d < best) best = d;
+    });
+    if(best !== Infinity) scored.push({p, score: best});
+  });
+  scored.sort((a,b) => a.score - b.score);
+  return scored.map(s => s.p);
+}
+
+function getFiltered(){
+  const q = document.getElementById('searchInput').value.trim();
+  let base = products;
+  if(activeChip !== 'Barchasi'){
+    base = base.filter(p => p.category === activeChip);
+  }
+  const fuzzyNote = document.getElementById('fuzzyNote');
+  if(!q){
+    fuzzyNote.style.display = 'none';
+    return base;
+  }
+  const ql = q.toLowerCase();
+  const exact = base.filter(p =>
+    p.name.toLowerCase().includes(ql) || (p.capacity||'').toLowerCase().includes(ql)
+  );
+  if(exact.length){
+    fuzzyNote.style.display = 'none';
+    return exact;
+  }
+  const fuzzy = fuzzyMatch(q, base);
+  fuzzyNote.style.display = fuzzy.length ? 'block' : 'none';
+  return fuzzy;
+}
+
+// ---------- Rendering ----------
+function fmtMoney(n){
+  return Math.round(n).toLocaleString('fr-FR').replace(/,/g,' ') + " so'm";
+}
+
+function render(){
+  const list = document.getElementById('list');
+  const filtered = getFiltered();
+  list.innerHTML = '';
+
+  if(!filtered.length){
+    list.innerHTML = `<div class="empty-state">
+      <div class="big">Mahsulot topilmadi</div>
+      <div>Qidiruvni o'zgartiring yoki yangi mahsulot qo'shing.</div>
+    </div>`;
+    return;
+  }
+
+  filtered.forEach(p => {
+    const profit = p.sellPrice - p.costPrice;
+    const pct = p.costPrice > 0 ? (profit / p.costPrice * 100) : 0;
+    const negative = profit < 0;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="name-row">
+            <span class="p-name">${escapeHtml(p.name)}</span>
+            ${p.capacity ? `<span class="p-cap">${escapeHtml(p.capacity)}</span>` : ''}
+          </div>
+          <div class="p-cat">${escapeHtml(p.category)}</div>
+        </div>
+        <div class="margin-pill ${negative ? 'negative' : ''}">${negative ? '' : '+'}${pct.toFixed(0)}%</div>
+      </div>
+      <div class="card-prices">
+        <div>Kirim: <b>${fmtMoney(p.costPrice)}</b></div>
+        <div>Sotish: <b>${fmtMoney(p.sellPrice)}</b></div>
+        <div>Foyda: <b style="color:${negative ? 'var(--red)' : 'var(--green)'}">${negative ? '-' : ''}${fmtMoney(Math.abs(profit))}</b></div>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" data-edit="${p.id}">Tahrirlash</button>
+        <button class="icon-btn danger" data-del="${p.id}">O'chirish</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  list.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => openForm(btn.dataset.edit));
+  });
+  list.querySelectorAll('[data-del]').forEach(btn => {
+    btn.addEventListener('click', () => deleteProduct(btn.dataset.del));
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ---------- Form ----------
+const formPanel = document.getElementById('formPanel');
+
+function openForm(id){
+  editingId = id || null;
+  const catPicker = document.getElementById('catPicker');
+  if(id){
+    const p = products.find(x => x.id === id);
+    document.getElementById('formTitle').textContent = "Mahsulotni tahrirlash";
+    document.getElementById('f_name').value = p.name;
+    document.getElementById('f_capacity').value = p.capacity || '';
+    document.getElementById('f_cost').value = p.costPrice;
+    document.getElementById('f_sell').value = p.sellPrice;
+    selectedCat = p.category;
+  } else {
+    document.getElementById('formTitle').textContent = "Yangi mahsulot";
+    document.getElementById('f_name').value = '';
+    document.getElementById('f_capacity').value = '';
+    document.getElementById('f_cost').value = '';
+    document.getElementById('f_sell').value = '';
+    selectedCat = 'Veterinariya';
+  }
+  catPicker.querySelectorAll('.cat-opt').forEach(el => {
+    el.classList.toggle('active', el.dataset.cat === selectedCat);
+  });
+  updateMarginPreview();
+  formPanel.style.display = 'block';
+  formPanel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function closeForm(){
+  formPanel.style.display = 'none';
+  editingId = null;
+}
+
+function updateMarginPreview(){
+  const cost = parseFloat(document.getElementById('f_cost').value) || 0;
+  const sell = parseFloat(document.getElementById('f_sell').value) || 0;
+  const profit = sell - cost;
+  const pct = cost > 0 ? (profit / cost * 100) : 0;
+  const box = document.getElementById('marginPreview');
+  box.classList.toggle('negative', profit < 0);
+  document.getElementById('marginAmt').textContent = (profit < 0 ? '-' : '') + fmtMoney(Math.abs(profit));
+  document.getElementById('marginPct').textContent = pct.toFixed(0) + '%';
+}
+
+document.getElementById('f_cost').addEventListener('input', updateMarginPreview);
+document.getElementById('f_sell').addEventListener('input', updateMarginPreview);
+
+document.getElementById('catPicker').addEventListener('click', (e) => {
+  const opt = e.target.closest('.cat-opt');
+  if(!opt) return;
+  selectedCat = opt.dataset.cat;
+  document.querySelectorAll('.cat-opt').forEach(el => el.classList.toggle('active', el === opt));
+});
+
+document.getElementById('openFormBtn').addEventListener('click', () => openForm(null));
+document.getElementById('closeFormBtn').addEventListener('click', closeForm);
+document.getElementById('cancelBtn').addEventListener('click', closeForm);
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const name = document.getElementById('f_name').value.trim();
+  const capacity = document.getElementById('f_capacity').value.trim();
+  const cost = parseFloat(document.getElementById('f_cost').value) || 0;
+  const sell = parseFloat(document.getElementById('f_sell').value) || 0;
+
+  if(!name){
+    alert("Mahsulot nomini kiriting");
+    return;
+  }
+
+  if(editingId){
+    const p = products.find(x => x.id === editingId);
+    p.name = name; p.capacity = capacity; p.category = selectedCat;
+    p.costPrice = cost; p.sellPrice = sell;
+  } else {
+    products.push({
+      id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      name, capacity, category: selectedCat,
+      costPrice: cost, sellPrice: sell
+    });
+  }
+  persist();
+  closeForm();
+  render();
+});
+
+function deleteProduct(id){
+  if(!confirm("Ushbu mahsulotni o'chirmoqchimisiz?")) return;
+  products = products.filter(p => p.id !== id);
+  persist();
+  render();
+}
+
+// ---------- Search & filters ----------
+document.getElementById('searchInput').addEventListener('input', render);
+
+document.getElementById('chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  activeChip = chip.dataset.cat;
+  document.querySelectorAll('.chip').forEach(el => el.classList.toggle('active', el === chip));
+  render();
+});
+
+// ---------- Backup export / import ----------
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(products, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mahsulot-narxlari-zaxira-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importFile').click();
+});
+
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try{
+      const parsed = JSON.parse(ev.target.result);
+      if(!Array.isArray(parsed)) throw new Error('invalid format');
+      if(!confirm(parsed.length + " ta mahsulot topildi. Joriy ro'yxatni almashtirasizmi?")) return;
+      products = parsed;
+      persist();
+      render();
+    }catch(err){
+      alert("Fayl noto'g'ri formatda");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+// ---------- Init ----------
+loadAll();
+</script>
+
+</body>
+</html>
